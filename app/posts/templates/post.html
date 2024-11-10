@@ -64,22 +64,28 @@
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary">Post</button>
             </form>
-
-            <!-- Existing Posts Feed -->
+           <!-- Existing Posts Feed -->
             <h2>Recent Posts</h2>
             <div id="posts-feed">
-                <!-- Example Post 1 -->
+                {% for post in posts %}
                 <div class="post">
                     <div class="post-header">
                         <img src="{{ url_for('static', filename='images/profilepicture1.webp') }}" alt="Profile Picture" class="profile-picture">
                         <div class="post-info">
-                            <strong>Interior Design Furnishing opportunity</strong><br>
-                            <span>2024-11-03 12:30:45</span>
+                            <strong>{{ post.title }}</strong><br>
+                            <span>{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>There will be a Summer Interior Design Class for students interested in Arts Designs. Ping me if interested!</p>
-                        <img src="{{ url_for('static', filename='images/post1.jpg') }}" alt="Post Image" class="post-image">
+                        <p>{{ post.content }}</p>
+                        
+                        {% if post.image_url %}
+                        <img src="{{ url_for('static', filename=post.image_url) }}" alt="Post Image" class="post-image">
+                        {% endif %}
+                        
+                        {% if post.video_url %}
+                        <video src="{{ url_for('static', filename=post.video_url) }}" controls class="post-video"></video>
+                        {% endif %}
                     </div>
                     <div class="post-actions">
                         <button onclick="likePost()">Like</button>
@@ -87,26 +93,7 @@
                         <button onclick="sharePost()">Reshare</button>
                     </div>
                 </div>
-
-                <!-- Example Post 2 -->
-                <div class="post">
-                    <div class="post-header">
-                        <img src="{{ url_for('static', filename='images/profilepicture2.webp') }}" alt="Profile Picture" class="profile-picture">
-                        <div class="post-info">
-                            <strong>SureStart 2025</strong><br>
-                            <span>2024-11-03 11:15:22</span>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>Ready for SureStart 2025? Here we go! Feel free to ping me if interested!</p>
-                        <video src="{{ url_for('static', filename='images/post2.mp4') }}" controls class="post-video"></video>
-                    </div>
-                    <div class="post-actions">
-                        <button onclick="likePost()">Like</button>
-                        <button onclick="commentPost()">Comment</button>
-                        <button onclick="sharePost()">Reshare</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

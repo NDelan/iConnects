@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from config import Config
+from app.auth.models import Alum
+from app.auth.models import Student
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -15,12 +17,13 @@ def create_app():
     app.config.from_object(Config)
 
     # Initialize extensions
-    # db.init_app(app)
-    # migrate.init_app(app, db)
-    # login_manager.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
 
     # Register models
-    # from .auth.models import Student, Alum
+    from .auth.models import Student, Alum
+    from .posts.models import Post
 
     # Register blueprints
     from .auth import auth as auth_blueprint
@@ -33,3 +36,12 @@ def create_app():
     app.register_blueprint(posts_blueprint)
     
     return app
+
+@login_manager.user_loader
+def load_user(user_id):
+    # Fetch the user from the database by ID
+    user = Alum.query.get(int(user_id))
+    if user:
+        return user
+    else:
+        return Student.query.get(int(user_id))

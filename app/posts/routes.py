@@ -54,7 +54,7 @@ def create_post():
         flash("Post created successfully!", "success")
         return redirect(url_for('posts.create_post'))
 
-    # # Fetch and display existing posts, ordered by timestamp
-    # posts = Post.query.order_by(Post.timestamp.desc()).all()
-    # return render_template('post.html', form=form, posts=posts)
-    return render_template('post.html')
+    # Fetch and display existing posts, ordered by timestamp
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('post.html', form=form, posts=posts)
+    # return render_template('post.html')

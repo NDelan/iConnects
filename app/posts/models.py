@@ -1,8 +1,9 @@
 from datetime import datetime
 from app import db
 from app.auth.models import Alum
+from flask_login import UserMixin
 
-class Post(db.Model):
+class Post(UserMixin, db.Model):
     __tablename__ = 'posts'
 
     # Primary Key
