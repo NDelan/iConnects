@@ -26,10 +26,29 @@
                     data-shape="pill"
                     data-logo_alignment="left">
                 </div>
+                <script>
+                    function handleCredentialResponse(response) {
+                        // Send the Google token to the server
+                        fetch("/signin", {
+                                            method: "POST",
+                                            headers: {"Content-Type": "application/json"},
+                                            body: JSON.stringify({credential: response.credential})
+                                        }
+                        )
+                        .then(response => {
+                            if (response.redirected) {
+                                window.location.href = response.url;
+                            } else {
+                                alert("Google sign-in failed. Please try again.");
+                            }
+                        })
+                        .catch(error => console.error("Error during Google Sign-In:", error));
+                    }
+                </script>
                 <!------------------------------------------------------->
                 
                 <br/>
-                <p id="or">or</p>
+                <p style="text-align: center;">or</p>
                 <br/>
                
                 <input class="item" type="text" name="username" placeholder="Username"/> <br/>
