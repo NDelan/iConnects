@@ -10,10 +10,28 @@
         <div class="container">
             <h3 class="item">Welcome to iConnects</h3>
             <form class="form" action="/signin" method="post">
-                <div class="item" id="buttons">
-                    <button class="button" id="sign-in">Sign in</button>
-                    <button class="button" id="sign-up">Sign up</button>
-                </div> <br/>
+
+                <!--------------- GOOGLE AUTHENTICATION BAR ------------>
+                <script src="https://accounts.google.com/gsi/client" async></script>
+                <div id="g_id_onload"
+                    data-client_id={{GOOGLE_CLIENT_ID}}
+                    data-login_uri="http://localhost:5000/signin"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="pill"
+                    data-logo_alignment="left">
+                </div>
+                <!------------------------------------------------------->
+                
+                <br/>
+                <p id="or">or</p>
+                <br/>
+               
                 <input class="item" type="text" name="username" placeholder="Username"/> <br/>
                 <input class="item" type="password" name="password" placeholder="Password"/> <br/>
                 <div class="item">

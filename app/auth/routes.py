@@ -13,6 +13,9 @@ from app import db
 from . import auth
 from flask_login import login_user, login_required, logout_user, current_user
 from app import login_manager
+import os 
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 
 @auth.route('/')
 @auth.route('/signin', methods=['GET', 'POST'])
@@ -39,7 +42,7 @@ def signin():
         else:
             flash('Username does not exist')
             return render_template('signup.html')
-    return render_template('signin.html')
+    return render_template('signin.html',GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
 
 
 @auth.route('/signup', methods=['GET', 'POST'])
