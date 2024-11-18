@@ -6,19 +6,19 @@
 #     return render_template('signin.html')
 
 
-from flask import render_template, redirect, url_for, flash, request, session
+from flask import render_template, redirect, url_for, flash, request, session, current_app
 from .models import Student, Alum
 from werkzeug.security import generate_password_hash
 from app import db
 from . import auth
 from flask_login import login_user, login_required, logout_user, current_user
-from app import login_manager, google
+from app import login_manager
 import app
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
 
-GOOGLE_CLIENT_ID = app.config['GOOGLE_CLIENT_ID']
+GOOGLE_CLIENT_ID = current_app.config['GOOGLE_CLIENT_ID']
 
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -67,7 +67,7 @@ def signin():
                 flash('Invalid username or password')
                 return redirect(url_for('auth.signin'))
 
-    return render_template('signin.html', GOOGLE_CLIENT_ID=app.config['GOOGLE_CLIENT_ID'])
+    return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
 
 
 @auth.route('/signup', methods=['GET', 'POST'])

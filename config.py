@@ -11,3 +11,6 @@ class Config:
     GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
     GOOGLE_DISCOVERY_URL = os.environ.get("GOOGLE_DISCOVERY_URL")
     REDIRECT_URI = os.environ.get("REDIRECT_URI")
+    TOKEN_URI = os.environ.get("TOKEN_URI")
+    AUTH_URI = os.environ.get("AUTH_URI")
+    API_BASE_URL = os.environ.get("API_BASE_URL")
