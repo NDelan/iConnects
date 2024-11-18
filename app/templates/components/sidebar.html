@@ -26,7 +26,10 @@
                     <span>Connections</span>
                 </a>
             </li>
-            <li class="menu-item"><i class="fas fa-user"></i> <span>Profile</span></li>
+            <li class="menu-item"><i class="fas fa-user"></i> 
+                <a href="{{ url_for('profile.create_profile') }}" style="color: inherit; text-decoration: none;">
+                    <span>Profile</span>
+                </a></li>
             <li class="menu-item"><i class="fas fa-graduation-cap"></i> <span>Mentors</span></li>
             <li class="menu-item"><i class="fas fa-calendar"></i> <span>Upcoming Events</span></li>
             <li class="menu-item"><i class="fas fa-file-alt"></i> 
