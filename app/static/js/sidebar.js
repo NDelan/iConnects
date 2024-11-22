@@ -3,6 +3,7 @@ function toggleSidebar() {
     const mainContent = document.querySelector('.main-content');
     const connectionsContent = document.querySelector('.connections-content');
     const postsContent = document.querySelector('.post-container');
+    const profileContent = document.querySelector('.profile-content');
 
     sidebar.classList.toggle('hidden');
     
@@ -10,10 +11,12 @@ function toggleSidebar() {
         if (mainContent) mainContent.style.marginLeft = '30px';
         if (connectionsContent) connectionsContent.style.marginLeft = '110px';
         if (postsContent) postsContent.style.marginLeft = '30px';
+        if (profileContent) profileContent.style.marginLeft = '120px';
 
     } else {
         if (mainContent) mainContent.style.marginLeft = '250px'; 
         if (connectionsContent) connectionsContent.style.marginLeft = '280px'; 
         if (postsContent) postsContent.style.marginLeft = '250px';
+        if (profileContent) profileContent.style.marginLeft = '250px';
     }
 }
