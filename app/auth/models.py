@@ -8,12 +8,16 @@ class Student(db.Model, UserMixin):
     student_id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
+    profile_title = db.Column(db.String(200), default="Enter profile title")
     initial = db.Column(db.String(3), nullable=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(30), nullable=False)
     mentor = db.Column(db.Integer, db.ForeignKey("alum.alum_id"), nullable=True)
 
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+    
     def set_password(self, password):
         """Create hashed password and store it in the database"""
         self.password_hash = generate_password_hash(password)

@@ -18,12 +18,12 @@
                 <div class="profile-card">
                     <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile" class="profile-image">
                     <div class="profile-name">
-                        <span id="profile-name-text">Team Dev</span>
-                        <input type="text" id="profile-name-input" value="Team Dev" style="display:none;">
+                        <span id="profile-name-text">{{ user_name }}</span>
+                        <input type="text" id="profile-name-input" value="{{ user_name }}" style="display:none;" disabled>
                     </div>
                     <div class="profile-title">
-                        <span id="profile-title-text">Computer Science at Colby</span>
-                        <input type="text" id="profile-title-input" value="Computer Science Major" style="display:none;">
+                        <span id="profile-title-text">{{ profile_title }}</span>
+                        <input type="text" id="profile-title-input" value="{{ profile_title }}" style="display:none;">
                     </div>
                     <button class="edit-btn" onclick="toggleEditProfile()">Edit</button>
                 </div>
@@ -54,10 +54,10 @@
                     <div class="section-header">
                         <div class="section-title">Experience</div>
                         <div class="header-actions">
-                            <button class="action-btn add-btn" onclick="openModal('experience', true)">+</button>
+                            <button class="action-btn add-btn" onclick="openModal('experiences', true)">+</button>
                         </div>
                     </div>
-                    <div id="experience-content">
+                    <div id="experiences-content">
                         <div class="empty-state">Click + to add your experience</div>
                     </div>
                 </div>
