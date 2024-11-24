@@ -1,11 +1,3 @@
-# from flask import render_template, url_for, redirect
-# from . import auth
-
-# @auth.route('/signin')
-# def signin():
-#     return render_template('signin.html')
-
-
 from flask import render_template, redirect, url_for, flash, request, session, current_app
 from .models import Student, Alum
 from werkzeug.security import generate_password_hash
@@ -20,6 +12,7 @@ from google.auth.transport import requests
 
 GOOGLE_CLIENT_ID = current_app.config['GOOGLE_CLIENT_ID']
 
+@auth.route('/')
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == "POST": # handles normal sign in 
@@ -39,14 +32,14 @@ def signin():
         else:
             flash('Invalid username or password')
             return redirect(url_for('auth.signin'))
+    print("the callback worked")
 
     return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
 
 
 
-@auth.route('/google_signin', methods=['POST'])
+@auth.route('/google_signin', methods=['GET', 'POST'])
 def google_signin():
-
     if 'credential' in request.form:  # Handles Google credential token
         token = request.form.get('credential')  # Get the ID token from the form
         try:
@@ -71,6 +64,7 @@ def google_signin():
             return redirect(url_for('main.home'))
         except ValueError:
             flash('Invalid Google token. Please try again.')
+            print("invalid token")
             return redirect(url_for('auth.signin'))
 
     flash('No Google credential received.')
