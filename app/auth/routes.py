@@ -1,10 +1,3 @@
-# from flask import render_template, url_for, redirect
-# from . import auth
-
-# @auth.route('/signin')
-# def signin():
-#     return render_template('signin.html')
-
 
 from flask import render_template, redirect, url_for, flash, request, session, current_app
 from .models import Student, Alum
@@ -46,9 +39,9 @@ def signin():
 
 @auth.route('/google_signin', methods=['POST'])
 def google_signin():
-
-    if 'credential' in request.form:  # Handles Google credential token
-        token = request.form.get('credential')  # Get the ID token from the form
+    if 'credential' in request.json:  # Handles Google credential token
+        data = request.get_json()
+        token = data['credential']
         try:
             # Verify Google ID token
             idinfo = id_token.verify_oauth2_token(

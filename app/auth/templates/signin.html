@@ -29,7 +29,7 @@
                 <script>
                     function handleCredentialResponse(response) {
                         // Send the Google token to the server
-                        fetch("/signin", {
+                        fetch("/google_signin", {
                                             method: "POST",
                                             headers: {"Content-Type": "application/json"},
                                             body: JSON.stringify({credential: response.credential})
