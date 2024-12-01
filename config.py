@@ -14,3 +14,7 @@ class Config:
     TOKEN_URI = os.environ.get("TOKEN_URI")
     AUTH_URI = os.environ.get("AUTH_URI")
     API_BASE_URL = os.environ.get("API_BASE_URL")
+
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'

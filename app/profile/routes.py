@@ -14,7 +14,7 @@ def parse_date(date_str):
     """Convert date string to datetime object"""
     if not date_str or date_str == 'Present':
         return None
-    return datetime.strptime(date_str, '%Y-%m-%d')
+    return datetime.strptime(date_str, '%Y-%m-%d').date() 
 
 
 @profile.route('/api/profile/<section>', methods=['POST'])

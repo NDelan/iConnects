@@ -5,17 +5,16 @@ from app import db
 from . import auth
 from flask_login import login_user, login_required, logout_user, current_user
 from app import login_manager
-import app
 from google.oauth2 import id_token
 from google.auth.transport import requests
-
-
-GOOGLE_CLIENT_ID = current_app.config['GOOGLE_CLIENT_ID']
 
 @auth.route('/')
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
-    if request.method == "POST": # handles normal sign in 
+    # Move the GOOGLE_CLIENT_ID access inside the function
+    google_client_id = current_app.config['GOOGLE_CLIENT_ID']
+    
+    if request.method == "POST":  # handles normal sign in 
         username = request.form.get('username')
         password = request.form.get('password')
         student = Student.query.filter_by(username=username).first()
@@ -32,20 +31,20 @@ def signin():
         else:
             flash('Invalid username or password')
             return redirect(url_for('auth.signin'))
-    print("the callback worked")
 
-    return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
-
-
+    return render_template('signin.html', GOOGLE_CLIENT_ID=google_client_id)
 
 @auth.route('/google_signin', methods=['GET', 'POST'])
 def google_signin():
+    # Move the GOOGLE_CLIENT_ID access inside the function
+    google_client_id = current_app.config['GOOGLE_CLIENT_ID']
+    
     if 'credential' in request.form:  # Handles Google credential token
         token = request.form.get('credential')  # Get the ID token from the form
         try:
             # Verify Google ID token
             idinfo = id_token.verify_oauth2_token(
-                token, request.reRequest(), current_app.config['GOOGLE_CLIENT_ID']
+                token, requests.Request(), google_client_id
             )
             email = idinfo.get('email')  # Extract email
             name = idinfo.get('name')  # Extract name
@@ -67,14 +66,14 @@ def google_signin():
             print("invalid token")
             return redirect(url_for('auth.signin'))
 
-    flash('No Google credential received.')
-    return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
+    return render_template('signin.html', GOOGLE_CLIENT_ID=google_client_id)
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup(): 
     if request.method == "POST":
         username = request.form.get('username')
-        password_hash=generate_password_hash(request.form.get('password'))
+        password_hash = generate_password_hash(request.form.get('password'))
+        
         if Student.query.filter_by(username=username).first() or Alum.query.filter_by(username=username).first():
             flash('Username already exists')
             return render_template('signin.html')
@@ -105,6 +104,3 @@ def signup():
             return render_template('signin.html')
         
     return render_template('signup.html')
-
-
-

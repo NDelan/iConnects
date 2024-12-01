@@ -6,7 +6,6 @@ from flask_login import LoginManager
 from config import Config
 from authlib.integrations.flask_client import OAuth
 
-
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
@@ -20,6 +19,9 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
+    if os.environ.get('CONFIG_TYPE') == 'config.TestingConfig':
+        app.config['TESTING'] = True
+        app.config['WTF_CSRF_ENABLED'] = False
 
     # OAuth 2 client setup
     oauth = OAuth(app)
@@ -34,7 +36,6 @@ def create_app():
             'scope': 'openid email profile',
         }
     )
-
 
     with app.app_context():
         from .auth.models import Student, Alum
@@ -53,8 +54,8 @@ def create_app():
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .profile import profile as main_blueprint
-    app.register_blueprint(main_blueprint)
+    from .profile import profile as profile_blueprint
+    app.register_blueprint(profile_blueprint)
 
     from .posts import posts as posts_blueprint
     app.register_blueprint(posts_blueprint)
