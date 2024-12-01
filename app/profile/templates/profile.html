@@ -18,7 +18,7 @@
                 <div class="profile-card">
                     <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile" class="profile-image">
                     <div class="profile-name">
-                        <span id="profile-name-text">Team Dev</span>
+                        <span id="profile-name-text">{{firstName}} {{lastName}}</span>
                         <input type="text" id="profile-name-input" value="Team Dev" style="display:none;">
                     </div>
                     <div class="profile-title">
@@ -30,7 +30,7 @@
         
                 <div class="connections-card">
                     <div class="connections-title">Connections</div>
-                    <div class="connection-item">Team Dev</div>
+                    <div class="connection-item">{{firstName}} {{lastName}}</div>
                     <a href="#" class="view-all">View All Connections</a>
                 </div>
             </div>

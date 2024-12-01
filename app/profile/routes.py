@@ -8,7 +8,9 @@ from datetime import datetime
 @profile.route('/profile', methods=['GET', 'POST'])
 @login_required
 def create_profile(): 
-    return render_template('profile.html')
+    FIRST = current_user.first_name
+    LAST = current_user.last_name
+    return render_template('profile.html',firstName=FIRST, lastName=LAST)
 
 def parse_date(date_str):
     """Convert date string to datetime object"""

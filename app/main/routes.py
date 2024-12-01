@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from . import main
 
 @main.route('/')
@@ -8,7 +8,7 @@ def index():
 
 @main.route('/home')
 # @login_required
-def home(): 
+def home():
     return render_template('home.html')
 
 # @main.route('/posts')
