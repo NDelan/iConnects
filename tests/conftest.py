@@ -24,22 +24,5 @@ def init_database():
 
     with flask_app.app_context():
         db.create_all()
-
-        alum = Alum(
-            first_name="Test",
-            last_name="Alum",
-            email="testalum@example.com",
-            password_hash="testpasswordhash"
-        )
-        db.session.add(alum)
-        db.session.commit()
-
         yield db
-
         db.drop_all()
-
-@pytest.fixture(scope="function")
-def alum_user(init_database):
-    """Fixture to return a test alum user."""
-    alum = Alum.query.filter_by(email="testalum@example.com").first()
-    return alum
