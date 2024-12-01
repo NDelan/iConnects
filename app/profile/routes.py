@@ -6,7 +6,7 @@ from . import profile
 from datetime import datetime
 
 @profile.route('/profile', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def create_profile(): 
     return render_template('profile.html')
 
@@ -18,7 +18,7 @@ def parse_date(date_str):
 
 
 @profile.route('/api/profile/<section>', methods=['POST'])
-# @login_required
+@login_required
 def add_profile_section(section):
     """Add a new item to profile section (projects, experiences, achievements)"""
     data = request.json
@@ -68,7 +68,7 @@ def add_profile_section(section):
         return jsonify({'error': 'Could not add item'}), 500
 
 @profile.route('/api/profile/<section>/<int:item_id>', methods=['PUT'])
-# @login_required
+@login_required
 def update_profile_section(section, item_id):
     """Update an existing profile section item"""
     data = request.json
@@ -114,7 +114,7 @@ def update_profile_section(section, item_id):
         return jsonify({'error': 'Could not update item'}), 500
 
 @profile.route('/api/profile/<section>/<int:item_id>', methods=['DELETE'])
-# @login_required
+@login_required
 def delete_profile_section(section, item_id):
     """Delete a profile section item"""
     models = {
@@ -144,7 +144,7 @@ def delete_profile_section(section, item_id):
         return jsonify({'error': 'Could not delete item'}), 500
 
 @profile.route('/api/profile/<section>', methods=['GET'])
-# @login_required
+@login_required
 def get_profile_section(section):
     """Get all items for a profile section"""
     models = {
