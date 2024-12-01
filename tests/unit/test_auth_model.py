@@ -27,7 +27,7 @@ def test_student_set_username():
 def test_student_check_username():
     student = Student()
     student.set_username('username')
-    assert student.check_username()
+    assert student.check_username('username')
 
 
 def test_student_set_mentor():
@@ -71,4 +71,4 @@ def test_alum_set_username():
 def test_alum_check_username():
     alum = Alum()
     alum.set_username('username')
-    assert alum.check_username()
+    assert alum.check_username('username')
