@@ -10,12 +10,13 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 
-GOOGLE_CLIENT_ID = current_app.config['GOOGLE_CLIENT_ID']
+def get_google_client_id():
+    return current_app.config['GOOGLE_CLIENT_ID']
 
 @auth.route('/')
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
-    if request.method == "POST": # handles normal sign in 
+    if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
         student = Student.query.filter_by(username=username).first()
@@ -34,23 +35,21 @@ def signin():
             return redirect(url_for('auth.signin'))
     print("the callback worked")
 
-    return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
+    return render_template('signin.html', GOOGLE_CLIENT_ID = get_google_client_id())
 
 
 
 @auth.route('/google_signin', methods=['GET', 'POST'])
 def google_signin():
-    if 'credential' in request.form:  # Handles Google credential token
-        token = request.form.get('credential')  # Get the ID token from the form
+    if 'credential' in request.form:
+        token = request.form.get('credential')
         try:
-            # Verify Google ID token
             idinfo = id_token.verify_oauth2_token(
-                token, request.reRequest(), current_app.config['GOOGLE_CLIENT_ID']
+                token, request.reRequest(), get_google_client_id()
             )
-            email = idinfo.get('email')  # Extract email
-            name = idinfo.get('name')  # Extract name
+            email = idinfo.get('email')
+            name = idinfo.get('name')
 
-            # Check if the user exists in the database
             student = Student.query.filter_by(email=email).first()
             alum = Alum.query.filter_by(email=email).first()
 
@@ -68,7 +67,7 @@ def google_signin():
             return redirect(url_for('auth.signin'))
 
     flash('No Google credential received.')
-    return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
+    return render_template('signin.html', get_google_client_id())
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup(): 
