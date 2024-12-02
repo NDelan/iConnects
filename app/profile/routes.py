@@ -36,14 +36,18 @@ def add_profile_section(section):
         return jsonify({'error': 'Invalid section'}), 400
     
     try:
+        # Validate required fields
+        if not data.get('title') or not data.get('description'):
+            return jsonify({'error': 'Title and description are required'}), 400
+
         # Create new item
         new_item = models[section](
             title=data['title'],
             subtitle=data.get('subtitle', ''),
             description=data.get('description', ''),
-            start_date=parse_date(data['startDate']),
-            end_date=parse_date(data['endDate']),
-            is_current=data['endDate'] == 'Present'
+            start_date=parse_date(data.get('startDate')),
+            end_date=parse_date(data.get('endDate')),
+            is_current=data.get('endDate') is None
         )
         
         # Set the appropriate user relationship
@@ -67,7 +71,7 @@ def add_profile_section(section):
     except Exception as e:
         current_app.logger.error(f"Error adding {section} item: {str(e)}")
         db.session.rollback()
-        return jsonify({'error': 'Could not add item'}), 500
+        return jsonify({'error': 'Could not add item'}), 400
 
 @profile.route('/api/profile/<section>/<int:item_id>', methods=['PUT'])
 @login_required
@@ -92,12 +96,17 @@ def update_profile_section(section, item_id):
             return jsonify({'error': 'Unauthorized'}), 403
         
         # Update fields
-        item.title = data['title']
-        item.subtitle = data.get('subtitle', '')
-        item.description = data.get('description', '')
-        item.start_date = parse_date(data['startDate'])
-        item.end_date = parse_date(data['endDate'])
-        item.is_current = data['endDate'] == 'Present'
+        if 'title' in data:
+            item.title = data['title']
+        if 'subtitle' in data:
+            item.subtitle = data.get('subtitle', '')
+        if 'description' in data:
+            item.description = data.get('description', '')
+        if 'startDate' in data:
+            item.start_date = parse_date(data['startDate'])
+        if 'endDate' in data:
+            item.end_date = parse_date(data['endDate'])
+            item.is_current = data['endDate'] is None
         
         db.session.commit()
         
@@ -108,13 +117,13 @@ def update_profile_section(section, item_id):
             'description': item.description,
             'startDate': item.start_date.strftime('%Y-%m-%d') if item.start_date else None,
             'endDate': 'Present' if item.is_current else (item.end_date.strftime('%Y-%m-%d') if item.end_date else None)
-        })
+        }), 200
         
     except Exception as e:
         current_app.logger.error(f"Error updating {section} item: {str(e)}")
         db.session.rollback()
-        return jsonify({'error': 'Could not update item'}), 500
-
+        return jsonify({'error': 'Could not update item'}), 400
+    
 @profile.route('/api/profile/<section>/<int:item_id>', methods=['DELETE'])
 @login_required
 def delete_profile_section(section, item_id):
