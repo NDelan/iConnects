@@ -45,10 +45,9 @@ def google_signin():
         try:
             # Verify Google ID token
             idinfo = id_token.verify_oauth2_token(
-                token, request.reRequest(), current_app.config['GOOGLE_CLIENT_ID']
+                token, requests.Request(), current_app.config['GOOGLE_CLIENT_ID']
             )
             email = idinfo.get('email')  # Extract email
-            name = idinfo.get('name')  # Extract name
 
             # Check if the user exists in the database
             student = Student.query.filter_by(email=email).first()
