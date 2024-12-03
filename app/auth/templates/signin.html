@@ -9,6 +9,8 @@
     <body>
         <div class="container">
             <h3 class="item">Welcome to iConnects</h3>
+            <form class="form" action="/signin" method="post">
+
                 <!--------------- GOOGLE AUTHENTICATION BAR ------------>
                 <script src="https://accounts.google.com/gsi/client" async></script>
                 <div id="g_id_onload"
@@ -47,11 +49,9 @@
                 <!------------------------------------------------------->
                 
                 <br/>
-
                 <p style="text-align: center;">or</p>
-            <br/>
+                <br/>
                
-            <form class="form" action="/signin" method="post">
                 <input class="item" type="text" name="username" placeholder="Username"/> <br/>
                 <input class="item" type="password" name="password" placeholder="Password"/> <br/>
                 <div class="item">
