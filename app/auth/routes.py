@@ -1,4 +1,3 @@
-
 from flask import render_template, redirect, url_for, flash, request, session, current_app
 from .models import Student, Alum
 from werkzeug.security import generate_password_hash
@@ -11,11 +10,13 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 
-GOOGLE_CLIENT_ID = current_app.config['GOOGLE_CLIENT_ID']
+def get_google_client_id():
+    return current_app.config['GOOGLE_CLIENT_ID']
 
+@auth.route('/')
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
-    if request.method == "POST": # handles normal sign in 
+    if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
         student = Student.query.filter_by(username=username).first()
@@ -32,24 +33,23 @@ def signin():
         else:
             flash('Invalid username or password')
             return redirect(url_for('auth.signin'))
+    print("the callback worked")
 
-    return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
+    return render_template('signin.html', GOOGLE_CLIENT_ID = get_google_client_id())
 
 
 
-@auth.route('/google_signin', methods=['POST'])
+@auth.route('/google_signin', methods=['GET', 'POST'])
 def google_signin():
     if 'credential' in request.json:  # Handles Google credential token
         data = request.get_json()
         token = data['credential']
         try:
-            # Verify Google ID token
             idinfo = id_token.verify_oauth2_token(
                 token, requests.Request(), current_app.config['GOOGLE_CLIENT_ID']
             )
             email = idinfo.get('email')  # Extract email
 
-            # Check if the user exists in the database
             student = Student.query.filter_by(email=email).first()
             alum = Alum.query.filter_by(email=email).first()
 
@@ -63,10 +63,11 @@ def google_signin():
             return redirect(url_for('main.home'))
         except ValueError:
             flash('Invalid Google token. Please try again.')
+            print("invalid token")
             return redirect(url_for('auth.signin'))
 
     flash('No Google credential received.')
-    return render_template('signin.html', GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID)
+    return render_template('signin.html', get_google_client_id())
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup(): 

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/profile.css')}}">
+    <script src="{{url_for('static', filename='js/profile.js')}}"></script>
+</head>
+
+<body>
+    {% extends 'base.html' %}
+    {% block content %}
+    <div class="profile-content">
+        <div class="container">
+            <div class="left-column">
+                <div class="profile-card">
+                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile" class="profile-image">
+                    <div class="profile-name">
+                        <span id="profile-name-text">{{firstName}} {{lastName}}</span>
+                        <input type="text" id="profile-name-input" value="Team Dev" style="display:none;">
+                    </div>
+                    <div class="profile-title">
+                        <span id="profile-title-text">Computer Science at Colby</span>
+                        <input type="text" id="profile-title-input" value="Computer Science Major" style="display:none;">
+                    </div>
+                    <button class="edit-btn" onclick="toggleEditProfile()">Edit</button>
+                </div>
+        
+                <div class="connections-card">
+                    <div class="connections-title">Connections</div>
+                    <div class="connection-item">{{firstName}} {{lastName}}</div>
+                    <a href="#" class="view-all">View All Connections</a>
+                </div>
+            </div>
+        
+            <div class="right-column">
+                <!-- Achievements Section -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Achievements</div>
+                        <div class="header-actions">
+                            <button class="action-btn add-btn" onclick="openModal('achievements', true)">+</button>
+                        </div>
+                    </div>
+                    <div id="achievements-content">
+                        <div class="empty-state">Click + to add your achievements</div>
+                    </div>
+                </div>
+        
+                <!-- Experience Section -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Experience</div>
+                        <div class="header-actions">
+                            <button class="action-btn add-btn" onclick="openModal('experiences', true)">+</button>
+                        </div>
+                    </div>
+                    <div id="experiences-content">
+                        <div class="empty-state">Click + to add your experience</div>
+                    </div>
+                </div>
+        
+                <!-- Projects Section -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Projects</div>
+                        <div class="header-actions">
+                            <button class="action-btn add-btn" onclick="openModal('projects', true)">+</button>
+                        </div>
+                    </div>
+                    <div id="projects-content">
+                        <div class="empty-state">Click + to add your projects</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal for Adding/Editing Content -->
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Achievement</h3>
+                <button onclick="closeModal()">×</button>
+            </div>
+            <form id="modal-form">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="subtitle">Subtitle</label>
+                    <input type="text" id="subtitle">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description"></textarea>
+                </div>
+                <div class="form-group date-inputs">
+                    <div>
+                        <label for="start-date">Start Date</label>
+                        <input type="date" id="start-date">
+                    </div>
+                    <div>
+                        <label for="end-date">End Date</label>
+                        <input type="date" id="end-date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="current-checkbox" class="current-checkbox">
+                    <label for="current-checkbox">I currently work here</label>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="save-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% endblock %}
+    
+    {% block scripts %}
+    <script src="{{url_for('static', filename='js/profile.js')}}"></script>
+    <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
+    {% endblock %}
+</body>
+</html>

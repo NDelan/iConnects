@@ -1,0 +1,343 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8;
+    transition: margin-left 0.3s;
+}
+
+.profile-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 65px;
+    transition: margin-left 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+}
+
+.profile-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.profile-title {
+    color: #65676B;
+    margin-bottom: 15px;
+}
+
+.connections-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.connections-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.connection-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.connection-item:last-child {
+    border-bottom: none;
+}
+
+.view-all {
+    color: #1877F2;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.section-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    color: #1877F2;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.action-btn:hover {
+    opacity: 1;
+    color: white;
+}
+
+.add-btn {
+    font-size: 24px;
+}
+
+.edit-btn {
+    font-size: 20px;
+}
+
+.item {
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.item-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item-subtitle {
+    color: #65676B;
+    margin-bottom: 5px;
+}
+
+.date-range {
+    color: #65676B;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.item-description {
+    color: #1C1E21;
+    line-height: 1.4;
+}
+
+.item-actions {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    display: none;
+    gap: 10px;
+}
+
+.item:hover .item-actions {
+    display: flex;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    z-index: 1001;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.date-inputs {
+    display: flex;
+    gap: 15px;
+}
+
+.current-checkbox {
+    margin-top: 10px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-btn {
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #e4e6eb;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.empty-state {
+    text-align: center;
+    color: #65676B;
+    padding: 20px;
+    font-style: italic;
+}
+
+.company-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Hover functionality for content items */
+.content-item {
+    position: relative;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.content-item:hover {
+    background-color: #f8f9fa;
+}
+
+.item-actions {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.content-item:hover .item-actions {
+    opacity: 1;
+}
+
+/* Style for action buttons */
+.action-btn.edit-btn,
+.action-btn.delete-btn {
+    padding: 0.25rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+.action-btn.edit-btn:hover {
+    color: #0d6efd;
+}
+
+.action-btn.delete-btn:hover {
+    color: #dc3545;
+}
+
+/* Icons for edit and delete buttons */
+.action-btn.edit-btn::before {
+    content: "✏️";
+    font-size: 1rem;
+}
+
+.action-btn.delete-btn::before {
+    content: "🗑️";
+    font-size: 1rem;
+}

@@ -53,6 +53,9 @@ def create_app():
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
+    from .profile import profile as main_blueprint
+    app.register_blueprint(main_blueprint)
+
     from .posts import posts as posts_blueprint
     app.register_blueprint(posts_blueprint)
 
