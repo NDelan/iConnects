@@ -9,25 +9,45 @@
     <body>
         <div class="container">
             <h3 class="item">Welcome to iConnects</h3>
+                <!--------------- GOOGLE AUTHENTICATION BAR ------------>
+                <script src="https://accounts.google.com/gsi/client" async></script>
+                <div id="g_id_onload"
+                    data-client_id="{{GOOGLE_CLIENT_ID}}"
+                    data-login_uri="http://localhost:5000/google_signin"
+                    data-auto_prompt="false"
+                    data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="pill"
+                    data-logo_alignment="left">
+                </div>
+                <script>
+                    function handleCredentialResponse(response) {
+                        // Send the Google token to the server
+                        fetch("/google_signin", {
+                                            method: "POST",
+                                            headers: {"Content-Type": "application/json"},
+                                            body: JSON.stringify({credential: response.credential})
+                                        }
+                        )
+                        .then(response => {
+                            if (response.redirected) {
+                                window.location.href = response.url;
+                            } else {
+                                alert("Google sign-in failed. Please try again.");
+                            }
+                        })
+                        .catch(error => console.error("Error during Google Sign-In:", error));
+                    }
+                </script>
+                <!------------------------------------------------------->
+                
+                <br/>
 
-            <!--------------- GOOGLE AUTHENTICATION BAR ------------>
-            <script src="https://accounts.google.com/gsi/client" async></script>
-            <div id="g_id_onload"
-                data-client_id={{GOOGLE_CLIENT_ID}}
-                data-login_uri="http://localhost:5000/google_signin"
-                data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                data-type="standard"
-                data-size="large"
-                data-theme="outline"
-                data-text="sign_in_with"
-                data-shape="pill"
-                data-logo_alignment="left">
-            </div>
-            <!------------------------------------------------------->
-
-            <br/>
                 <p style="text-align: center;">or</p>
             <br/>
                

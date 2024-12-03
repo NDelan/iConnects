@@ -41,14 +41,14 @@ def signin():
 
 @auth.route('/google_signin', methods=['GET', 'POST'])
 def google_signin():
-    if 'credential' in request.form:
-        token = request.form.get('credential')
+    if 'credential' in request.json:  # Handles Google credential token
+        data = request.get_json()
+        token = data['credential']
         try:
             idinfo = id_token.verify_oauth2_token(
-                token, request.reRequest(), get_google_client_id()
+                token, requests.Request(), current_app.config['GOOGLE_CLIENT_ID']
             )
-            email = idinfo.get('email')
-            name = idinfo.get('name')
+            email = idinfo.get('email')  # Extract email
 
             student = Student.query.filter_by(email=email).first()
             alum = Alum.query.filter_by(email=email).first()
