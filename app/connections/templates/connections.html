@@ -12,9 +12,24 @@
     {% block content %}
     <div class="connections-content">
         <section class="connections-section">
-            <h2>Your Connections</h2>
+            <h2>
+                {% if current_user.__tablename__== 'student' %}
+                    Your Mentors 
+                {% elif current_user.__tablename__ == 'alum' %}
+                    Your Mentees 
+                {% else %}
+                    Your Connections
+                {% endif %}
+            </h2>
             <div id="connections-container" class="connections-container"></div>
         </section>
+        <br><br>
+        <hr class="divider">
+        <section class="connections-section">
+            <h2>People You May Know</h2>
+            <div id="may-know-container" class="connections-container"></div>
+        </section>
+
     </div>
     {% endblock %}
     <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
