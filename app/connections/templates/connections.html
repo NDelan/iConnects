@@ -5,34 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IConnect - Connections</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/connections.css')}}">
+    <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
     <script src="{{url_for('static', filename='js/connections.js')}}"></script>
 </head>
 <body>
     {% extends 'base.html' %}
     {% block content %}
     <div class="connections-content">
+        <!-- Your Mentors/Mentees/Connections Section -->
         <section class="connections-section">
-            <h2>
-                {% if current_user.__tablename__== 'student' %}
-                    Your Mentors 
-                {% elif current_user.__tablename__ == 'alum' %}
-                    Your Mentees 
-                {% else %}
-                    Your Connections
-                {% endif %}
-            </h2>
+            <div class="section-header">
+                <h2>
+                    {% if current_user.__tablename__== 'student' %}
+                        Your Mentors
+                    {% elif current_user.__tablename__ == 'alum' %}
+                        Your Mentees
+                    {% else %}
+                        Your Connections
+                    {% endif %}
+                </h2>
+                <div class="search-container">
+                    <input type="text" id="connections-search" placeholder="Search connections">
+                </div>
+            </div>
             <div id="connections-container" class="connections-container"></div>
         </section>
+
         <br><br>
         <hr class="divider">
+
+        <!-- People You May Know Section -->
         <section class="connections-section">
-            <h2>People You May Know</h2>
+            <div class="section-header">
+                <h2>People You May Know</h2>
+                <div class="search-container">
+                    <input type="text" id="may-know-search" placeholder="Search people">
+                </div>
+            </div>
             <div id="may-know-container" class="connections-container"></div>
         </section>
 
     </div>
     {% endblock %}
-    <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
-    
 </body>
 </html>
