@@ -14,36 +14,21 @@ const peopleYouMayKnow = [
 ];
 
 
-// Function to load connections
-function loadConnections() {
-    const container = document.getElementById("connections-container");
-    const mayKnowContainer = document.getElementById("may-know-container");
-
-    // Load your connections
-    connections.forEach(connection => {
-        createConnectionCard(container, connection, "Schedule");
-    });
-
-    // Load people you may know
-    peopleYouMayKnow.forEach(person => {
-        createConnectionCard(mayKnowContainer, person, "Connect");
-    });
-}
-
-function createConnectionCard(container, connectionData, buttonText) {
+// Function to create connection card
+function createConnectionCard(connection, buttonText) {
     const card = document.createElement("div");
     card.className = "connection-card";
 
     // Sample placeholder profile image
     const img = document.createElement("img");
     img.src = "https://via.placeholder.com/80";
-    img.alt = `${connectionData.name}'s profile picture`;
+    img.alt = `${connection.name}'s profile picture`;
 
     const name = document.createElement("h3");
-    name.textContent = connectionData.name;
+    name.textContent = connection.name;
 
     const title = document.createElement("p");
-    title.textContent = connectionData.title;
+    title.textContent = connection.title;
 
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "button-container";
@@ -69,7 +54,66 @@ function createConnectionCard(container, connectionData, buttonText) {
     card.appendChild(title);
     card.appendChild(buttonContainer);
 
-    container.appendChild(card);
+    return card;
+}
+
+// Function to load connections
+function loadConnections() {
+    const connectionsContainer = document.getElementById("connections-container");
+    const mayKnowContainer = document.getElementById("may-know-container");
+
+    // Clear existing content
+    connectionsContainer.innerHTML = "";
+    mayKnowContainer.innerHTML = "";
+
+    // Load your connections
+    connections.forEach(connection => {
+        const card = createConnectionCard(connection, "Schedule");
+        connectionsContainer.appendChild(card);
+    });
+
+    // Load people you may know
+    peopleYouMayKnow.forEach(person => {
+        const card = createConnectionCard(person, "Connect");
+        mayKnowContainer.appendChild(card);
+    });
+
+    // Add search functionality
+    setupSearch("connections-search", connectionsContainer, connections, "Schedule");
+    setupSearch("may-know-search", mayKnowContainer, peopleYouMayKnow, "Connect");
+}
+
+// Function to setup search functionality
+function setupSearch(searchInputId, container, dataArray, buttonText) {
+    const searchInput = document.getElementById(searchInputId);
+    
+    searchInput.addEventListener("input", function() {
+        // Get the search term and convert to lowercase
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        // Clear the current container
+        container.innerHTML = "";
+        
+        // Filter the connections based on the search term
+        const filteredConnections = dataArray.filter(connection => 
+            connection.name.toLowerCase().includes(searchTerm) || 
+            connection.title.toLowerCase().includes(searchTerm)
+        );
+        
+        // Recreate connection cards for filtered results
+        filteredConnections.forEach(connection => {
+            const card = createConnectionCard(connection, buttonText);
+            container.appendChild(card);
+        });
+        
+        // If no results, show a message
+        if (filteredConnections.length === 0) {
+            const noResultsMessage = document.createElement("p");
+            noResultsMessage.textContent = "No connections found.";
+            noResultsMessage.classList.add("no-results");
+            container.appendChild(noResultsMessage);
+        }
+    });
 }
 
 // Load connections when the page loads
