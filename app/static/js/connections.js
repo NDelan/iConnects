@@ -1,19 +1,3 @@
-// Array of  connections data
-const connections = [
-    { name: "Alex Johnson", title: "Software Engineer at TechCorp" },
-    { name: "Emily Davis", title: "Graphic Designer at Creatives Inc." },
-    { name: "Michael Lee", title: "Marketing Manager at Marketify" }
-];
-
-
-// Array of  connections data
-const peopleYouMayKnow = [
-    { name: "Alex Johnson", title: "Software Engineer at TechCorp" },
-    { name: "Emily Davis", title: "Graphic Designer at Creatives Inc." },
-    { name: "Michael Lee", title: "Marketing Manager at Marketify" }
-];
-
-
 // Function to create connection card
 function createConnectionCard(connection, buttonText) {
     const card = document.createElement("div");
@@ -57,8 +41,8 @@ function createConnectionCard(connection, buttonText) {
     return card;
 }
 
-// Function to load connections
-function loadConnections() {
+// Function to load connections dynamically from API
+async function loadConnections() {
     const connectionsContainer = document.getElementById("connections-container");
     const mayKnowContainer = document.getElementById("may-know-container");
 
@@ -66,22 +50,40 @@ function loadConnections() {
     connectionsContainer.innerHTML = "";
     mayKnowContainer.innerHTML = "";
 
-    // Load your connections
-    connections.forEach(connection => {
-        const card = createConnectionCard(connection, "Schedule");
-        connectionsContainer.appendChild(card);
-    });
+    try {
+        // Fetch user data from the API
+        const response = await fetch('/api/user_info');
+        const userInfo = await response.json();
 
-    // Load people you may know
-    peopleYouMayKnow.forEach(person => {
-        const card = createConnectionCard(person, "Connect");
-        mayKnowContainer.appendChild(card);
-    });
+        if (response.ok) {
+            // Display the logged-in user's info
+            const userCard = createConnectionCard(
+                { name: "You", title: userInfo.user_type },
+                "Schedule"
+            );
+            connectionsContainer.appendChild(userCard);
 
-    // Add search functionality
-    setupSearch("connections-search", connectionsContainer, connections, "Schedule");
-    setupSearch("may-know-search", mayKnowContainer, peopleYouMayKnow, "Connect");
+            // Display connections (others)
+            userInfo.others.forEach(connection => {
+                const card = createConnectionCard(connection, "Connect");
+                mayKnowContainer.appendChild(card);
+            });
+
+            // Add search functionality for "others"
+            setupSearch(
+                "may-know-search",
+                mayKnowContainer,
+                userInfo.others,
+                "Connect"
+            );
+        } else {
+            console.error(userInfo.error);
+        }
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+    }
 }
+
 
 // Function to setup search functionality
 function setupSearch(searchInputId, container, dataArray, buttonText) {

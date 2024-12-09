@@ -40,7 +40,14 @@ class Student(db.Model, UserMixin):
     
     def get_id(self):
         return self.student_id
+    
+    @property
+    def is_student(self):
+        return True
 
+    @property
+    def is_alum(self):
+        return False
 
 class Alum(db.Model, UserMixin):
     __tablename__ = 'alum'
@@ -70,3 +77,11 @@ class Alum(db.Model, UserMixin):
 
     def get_id(self):
         return self.alum_id
+
+    @property
+    def is_student(self):
+        return False
+
+    @property
+    def is_alum(self):
+        return True

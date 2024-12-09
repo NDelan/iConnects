@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, session, current_app
+from flask import jsonify, render_template, redirect, url_for, flash, request, session, current_app
 from .models import Student, Alum
 from werkzeug.security import generate_password_hash
 from app import db
@@ -105,5 +105,29 @@ def signup():
         
     return render_template('signup.html')
 
+@auth.route('/api/user_info')
+@login_required
+def get_user_info():
+    user = current_user  # The logged-in user (Student or Alum)
 
+    if user.is_student:  # If the user is a Student
+        alums = Alum.query.limit(50).all()  # Limit to 50 results to avoid large payloads
+        other_users_info = [
+            {"name": f"{alum.first_name} {alum.last_name}", "title": alum.username}
+            for alum in alums
+        ]
+        response_data = {"user_type": "student", "others": other_users_info}
+        print(response_data)  # Debug print of the data as a dictionary
+        return jsonify(response_data)
+    
 
+    elif user.is_alum:  # If the user is an Alum
+        students = Student.query.limit(50).all()  # Limit to 50 results
+        other_users_info = [
+            {"name": f"{student.first_name} {student.last_name}", "title": student.username}
+            for student in students
+        ]
+        return jsonify({"user_type": "alum", "others": other_users_info})
+
+    # Fallback for unexpected user types
+    return jsonify({"error": "User is neither a Student nor an Alum"}), 400
