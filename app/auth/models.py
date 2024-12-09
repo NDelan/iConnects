@@ -13,6 +13,7 @@ class Student(db.Model, UserMixin):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(30), nullable=False)
     mentor = db.Column(db.Integer, db.ForeignKey("alum.alum_id"), nullable=True)
+    headline = db.Column(db.String(120), nullable=True)
 
     def set_password(self, password):
         """Create hashed password and store it in the database"""
@@ -38,6 +39,14 @@ class Student(db.Model, UserMixin):
         """Returns the mentor of the student"""
         return self.mentor
     
+    def get_headline(self):
+        """Returns the profile headline of the student"""
+        return self.headline
+    
+    def set_headline(self, headline):
+        """Sets the profile headline of the student"""
+        self.headline = headline
+
     def get_id(self):
         return self.student_id
     
@@ -58,6 +67,7 @@ class Alum(db.Model, UserMixin):
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(30), nullable=False)
+    headline = db.Column(db.String(120), nullable=True)
 
     def set_password(self, password):
         """Create hashed password and store it in the database"""
@@ -74,6 +84,14 @@ class Alum(db.Model, UserMixin):
     def set_username(self, username):
         """Set username to a new value"""
         self.username = username
+
+    def get_headline(self):
+        """Returns the profile headline of the student"""
+        return self.headline
+    
+    def set_headline(self, headline):
+        """Sets the profile headline of the student"""
+        self.headline = headline
 
     def get_id(self):
         return self.alum_id
