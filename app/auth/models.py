@@ -1,3 +1,4 @@
+from flask import url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -9,6 +10,8 @@ class Student(db.Model, UserMixin):
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
     initial = db.Column(db.String(3), nullable=True)
+    profile_picture_data = db.Column(db.LargeBinary, nullable=True)
+    profile_picture_content_type = db.Column(db.String(50), nullable=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(30), nullable=False)
@@ -50,6 +53,12 @@ class Student(db.Model, UserMixin):
     def get_id(self):
         return self.student_id
     
+    def get_profile_picture_url(self):
+        """Generate a URL to serve the profile picture."""
+        if self.profile_picture_data:
+            return url_for('profile.serve_profile_picture', user_id=self.student_id)
+        return url_for('static', filename='images/profile.jpg')
+    
     @property
     def is_student(self):
         return True
@@ -64,6 +73,8 @@ class Alum(db.Model, UserMixin):
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
     initial = db.Column(db.String(3), nullable=True)
+    profile_picture_data = db.Column(db.LargeBinary, nullable=True)
+    profile_picture_content_type = db.Column(db.String(50), nullable=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(30), nullable=False)
@@ -95,6 +106,12 @@ class Alum(db.Model, UserMixin):
 
     def get_id(self):
         return self.alum_id
+    
+    def get_profile_picture_url(self):
+        """Generate a URL to serve the profile picture."""
+        if self.profile_picture_data:
+            return url_for('profile.serve_profile_picture', user_id=self.alum_id)
+        return url_for('static', filename='images/profile.jpg')
 
     @property
     def is_student(self):

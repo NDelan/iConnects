@@ -25,24 +25,37 @@ function setupProfileEditing() {
     const nameInput = document.getElementById('profile-name-input');
     const titleText = document.getElementById('profile-title-text');
     const titleInput = document.getElementById('profile-title-input');
+    const profilePictureInput = document.getElementById('profile-picture-input');
+    const profilePicturePreview = document.getElementById('profile-picture-preview');
+    const saveButton = document.getElementById('save-btn');
 
     window.toggleEditProfile = function() {
         const isEditing = nameInput.style.display === 'block';
         if (isEditing) {
-            // Save changes
-            nameText.textContent = nameInput.value;
-            titleText.textContent = titleInput.value;
-            
             nameText.style.display = 'block';
             nameInput.style.display = 'none';
             titleText.style.display = 'block';
             titleInput.style.display = 'none';
+            profilePictureInput.style.display = 'none';
+            saveButton.style.display = 'none';
         } else {
-            // Show inputs
             nameInput.style.display = 'block';
             nameText.style.display = 'none';
             titleInput.style.display = 'block';
             titleText.style.display = 'none';
+            profilePictureInput.style.display = 'block';
+            saveButton.style.display = 'inline-block';
+        }
+    };
+
+    window.previewProfilePicture = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profilePicturePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
     };
 }
