@@ -16,16 +16,22 @@
         <div class="container">
             <div class="left-column">
                 <div class="profile-card">
-                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile" class="profile-image">
-                    <div class="profile-name">
-                        <span id="profile-name-text">{{firstName}} {{lastName}}</span>
-                        <input type="text" id="profile-name-input" value="Team Dev" style="display:none;">
-                    </div>
-                    <div class="profile-title">
-                        <span id="profile-title-text">Computer Science at Colby</span>
-                        <input type="text" id="profile-title-input" value="Computer Science Major" style="display:none;">
-                    </div>
-                    <button class="edit-btn" onclick="toggleEditProfile()">Edit</button>
+                    <img src="{{ current_user.get_profile_picture_url() }}" alt="Profile" class="profile-image" id="profile-picture-preview"> 
+                    <form id="profile-edit-form" method="POST" action="{{ url_for('profile.update_profile') }}" enctype="multipart/form-data">
+                        <input type="file" id="profile-picture-input" name="profile_picture" style="display: none;" accept="image/*" 
+                               onchange="previewProfilePicture(event)">
+                
+                        <div class="profile-name">
+                            <span id="profile-name-text">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+                            <input type="text" id="profile-name-input" name="name" value="{{ current_user.first_name }} {{ current_user.last_name }}" style="display: none;">
+                        </div>
+                        <div class="profile-title">
+                            <span id="profile-title-text">{{ current_user.headline }}</span>
+                            <input type="text" id="profile-title-input" name="title" value="{{ current_user.headline }}" style="display: none;">
+                        </div>
+                        <button type="button" class="edit-btn" onclick="toggleEditProfile()">Edit</button>
+                        <button type="submit" id="save-btn" style="display: none;">Save</button>
+                    </form>
                 </div>
         
                 <div class="connections-card">
