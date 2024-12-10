@@ -12,11 +12,11 @@
     <nav class="sidebar hidden">
         <div class="profile-section">
             <span class="close-btn" onclick="toggleSidebar()">&times;</span>
-            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile" class="profile-image">
+            <img src="{{ current_user.get_profile_picture_url() }}" alt="Profile" class="profile-image">
             <h3>{{current_user.first_name}} {{current_user.last_name}}</h3>
             <p>
                 {% if current_user.__tablename__== 'student' %}
-                    Student 
+                    Student
                 {% elif current_user.__tablename__ == 'alum' %}
                     Alum 
                 {% else %}
