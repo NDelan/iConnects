@@ -16,7 +16,7 @@
         <section class="connections-section">
             <div class="section-header">
                 <h2>
-                    {% if current_user.__tablename__== 'student' %}
+                    {% if current_user.__tablename__ == 'student' %}
                         Your Mentors
                     {% elif current_user.__tablename__ == 'alum' %}
                         Your Mentees
@@ -44,6 +44,24 @@
             </div>
             <div id="may-know-container" class="connections-container"></div>
         </section>
+
+        <br><br>
+        <hr class="divider">
+
+        <!-- Sent/Received Requests Section -->
+        <section class="connections-section">
+            <div class="section-header">
+                <h2 id="requests-toggle-label">Sent Requests</h2>
+                <button id="requests-toggle-btn" onclick="toggleRequestsSection()">Switch to Received Requests</button>
+            </div>
+            <div id="sent-requests-container" class="connections-container">
+                <!-- Cards for Sent Requests will go here -->
+            </div>
+            <div id="received-requests-container" class="connections-container" style="display: none;">
+                <!-- Cards for Received Requests will go here -->
+            </div>
+        </section>
+
 
     </div>
     {% endblock %}

@@ -1,3 +1,14 @@
+// Hardcoded sample requests
+const sentRequests = [
+    { name: "John Doe", title: "Student", status: "Pending" },
+    { name: "Jane Smith", title: "Alum", status: "Pending" }
+];
+
+const receivedRequests = [
+    { name: "Tom Wilson", title: "Alum", status: "Pending" },
+    { name: "Jane Smith", title: "Alum", status: "Pending" }
+];
+
 // Function to create connection card
 function createConnectionCard(connection, buttonText) {
     const card = document.createElement("div");
@@ -13,6 +24,9 @@ function createConnectionCard(connection, buttonText) {
 
     const title = document.createElement("p");
     title.textContent = connection.title;
+
+    const status = document.createElement("p");
+    status.textContent = `Status: ${connection.status}`;
 
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "button-container";
@@ -36,10 +50,32 @@ function createConnectionCard(connection, buttonText) {
     card.appendChild(img);
     card.appendChild(name);
     card.appendChild(title);
+    card.appendChild(status); // Adding status to the card
     card.appendChild(buttonContainer);
 
     return card;
 }
+
+// Function to toggle between Sent and Received Requests
+    function toggleRequestsSection() {
+        const sentContainer = document.getElementById("sent-requests-container");
+        const receivedContainer = document.getElementById("received-requests-container");
+        const toggleButton = document.getElementById("requests-toggle-btn");
+        const requestsLabel = document.getElementById("requests-toggle-label");
+
+        if (sentContainer.style.display === "none") {
+            sentContainer.style.display = "block";
+            receivedContainer.style.display = "none";
+            toggleButton.textContent = "Switch to Received Requests";
+            requestsLabel.textContent = "Sent Requests";
+        } else {
+            sentContainer.style.display = "none";
+            receivedContainer.style.display = "block";
+            toggleButton.textContent = "Switch to Sent Requests";
+            requestsLabel.textContent = "Received Requests";
+        }
+    }
+
 
 // Function to load connections dynamically from API
 async function loadConnections() {
@@ -58,7 +94,7 @@ async function loadConnections() {
         if (response.ok) {
             // Display the logged-in user's info
             const userCard = createConnectionCard(
-                { name: "You", title: userInfo.user_type },
+                { name: "You", title: userInfo.user_type, status: "Active" },
                 "Schedule"
             );
             connectionsContainer.appendChild(userCard);
@@ -76,6 +112,9 @@ async function loadConnections() {
                 userInfo.others,
                 "Connect"
             );
+
+            // Load and display Sent and Received Requests
+            loadRequestCards();
         } else {
             console.error(userInfo.error);
         }
@@ -84,6 +123,40 @@ async function loadConnections() {
     }
 }
 
+// Function to create request cards for Sent and Received Requests
+function loadRequestCards() {
+    const sentContainer = document.getElementById("sent-requests-container");
+    const receivedContainer = document.getElementById("received-requests-container");
+
+    // Clear existing content
+    sentContainer.innerHTML = "";
+    receivedContainer.innerHTML = "";
+
+    // Ensure there is data in sentRequests and receivedRequests
+    if (sentRequests.length === 0) {
+        console.log("No sent requests to display.");
+    } else {
+        // Display Sent Requests
+        sentRequests.forEach(request => {
+            const card = createConnectionCard(request, "Cancel Request");
+            sentContainer.appendChild(card);
+        });
+    }
+
+    if (receivedRequests.length === 0) {
+        console.log("No received requests to display.");
+    } else {
+        // Display Received Requests
+        receivedRequests.forEach(request => {
+            const card = createConnectionCard(request, "Accept Request");
+            receivedContainer.appendChild(card);
+        });
+    }
+
+    // Set initial state for toggling
+    sentContainer.style.display = "block";
+    receivedContainer.style.display = "none";
+}
 
 // Function to setup search functionality
 function setupSearch(searchInputId, container, dataArray, buttonText) {
