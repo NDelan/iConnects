@@ -6,6 +6,8 @@ body {
     place-items: center;
     height: 100vh;
     color: white;
+    background-image: url('../images/miller.webp');
+    background-size: cover;
 }
 .form {
     display: flex;
