@@ -1,15 +1,15 @@
 /* main.css */
 
 /* CSS Variables for consistent theme across the app */
-:root {
-    --primary-blue: #2b669c;
-    --secondary-blue: #3498db;
-    --dark-blue: #1a4971;
+/* :root {
+    --primary-blue: #C0A690;
+    --secondary-blue: #C0A690;
+    --dark-blue: #C0A690;
     --white: #ffffff;
     --gray: #f5f6fa;
     --dark-bg: #2d2d2d;
     --light-gray: #cccccc;
-}
+} */
 
 /* Reset basic styling */
 * {
@@ -58,7 +58,7 @@ body {
 
 .section-title {
     font-size: 1.5rem;
-    color: var(--primary-blue);
+    color: var(--white);
     margin-bottom: 15px;
 }
 

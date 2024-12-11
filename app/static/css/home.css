@@ -1,10 +1,10 @@
-:root {
-    --primary-blue: #2b669c;
-    --secondary-blue: #3498db;
-    --dark-blue: #1a4971;
+/* :root {
+    --primary-blue: #C0A690;
+    --secondary-blue: #C0A690;
+    --dark-blue: #C0A690;
     --white: #ffffff;
     --gray: #f5f6fa;
-}
+} */
 
 * {
     margin: 0;
@@ -100,7 +100,7 @@ body {
 .event-title {
     font-size: 1.2em;
     margin-bottom: 10px;
-    color: var(--dark-blue);
+    color: var(--white);
 }
 
 .event-description {
