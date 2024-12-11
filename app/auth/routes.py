@@ -1,4 +1,4 @@
-from flask import jsonify, render_template, redirect, url_for, flash, request, session, current_app
+from flask import jsonify, render_template, redirect, url_for, flash, request, session, current_app, send_file
 from .models import Student, Alum
 from werkzeug.security import generate_password_hash
 from app import db
@@ -110,24 +110,32 @@ def signup():
 def get_user_info():
     user = current_user  # The logged-in user (Student or Alum)
 
+    def serialize_user(user):
+        return {
+            "name": f"{user.first_name} {user.last_name}",
+            "title": user.username,
+            "profile_picture_url": user.get_profile_picture_url()
+        }
+
     if user.is_student:  # If the user is a Student
-        alums = Alum.query.limit(50).all()  # Limit to 50 results to avoid large payloads
-        other_users_info = [
-            {"name": f"{alum.first_name} {alum.last_name}", "title": alum.username}
-            for alum in alums
-        ]
+        alums = Alum.query.limit(50).all()  # Limit to 50 results
+        other_users_info = [serialize_user(alum) for alum in alums]
         response_data = {"user_type": "student", "others": other_users_info}
-        print(response_data)  # Debug print of the data as a dictionary
         return jsonify(response_data)
-    
 
     elif user.is_alum:  # If the user is an Alum
         students = Student.query.limit(50).all()  # Limit to 50 results
-        other_users_info = [
-            {"name": f"{student.first_name} {student.last_name}", "title": student.username}
-            for student in students
-        ]
+        other_users_info = [serialize_user(student) for student in students]
         return jsonify({"user_type": "alum", "others": other_users_info})
 
-    # Fallback for unexpected user types
     return jsonify({"error": "User is neither a Student nor an Alum"}), 400
+
+@auth.route('/profile_picture/<int:user_id>')
+def serve_profile_picture(user_id):
+    user = Student.query.get(user_id) or Alum.query.get(user_id)
+    if user and user.profile_picture_data:
+        return send_file(
+            io.BytesIO(user.profile_picture_data),
+            mimetype=user.profile_picture_content_type
+        )
+    return url_for('static', filename='images/profile.jpg')  # Default image

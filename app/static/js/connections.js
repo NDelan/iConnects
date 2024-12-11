@@ -1,12 +1,10 @@
 // Hardcoded sample requests
 const sentRequests = [
-    { name: "John Doe", title: "Student", status: "Pending" },
-    { name: "Jane Smith", title: "Alum", status: "Pending" }
+    { name: "Kofi Doe", title: "Student", status: "Pending" }
 ];
 
 const receivedRequests = [
-    { name: "Tom Wilson", title: "Alum", status: "Pending" },
-    { name: "Jane Smith", title: "Alum", status: "Pending" }
+    { name: "Odogwu Wilson", title: "Alum", status: "Pending" }
 ];
 
 // Function to create connection card
@@ -14,9 +12,8 @@ function createConnectionCard(connection, buttonText) {
     const card = document.createElement("div");
     card.className = "connection-card";
 
-    // Sample placeholder profile image
     const img = document.createElement("img");
-    img.src = "https://via.placeholder.com/80";
+    img.src = connection.profile_picture_url || "https://via.placeholder.com/80";
     img.alt = `${connection.name}'s profile picture`;
 
     const name = document.createElement("h3");
@@ -24,9 +21,6 @@ function createConnectionCard(connection, buttonText) {
 
     const title = document.createElement("p");
     title.textContent = connection.title;
-
-    const status = document.createElement("p");
-    status.textContent = `Status: ${connection.status}`;
 
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "button-container";
@@ -50,11 +44,11 @@ function createConnectionCard(connection, buttonText) {
     card.appendChild(img);
     card.appendChild(name);
     card.appendChild(title);
-    card.appendChild(status); // Adding status to the card
     card.appendChild(buttonContainer);
 
     return card;
 }
+
 
 // Function to toggle between Sent and Received Requests
     function toggleRequestsSection() {
@@ -94,7 +88,7 @@ async function loadConnections() {
         if (response.ok) {
             // Display the logged-in user's info
             const userCard = createConnectionCard(
-                { name: "You", title: userInfo.user_type, status: "Active" },
+                { name: "Test Case", title: "Analyst", status: "Active" },
                 "Schedule"
             );
             connectionsContainer.appendChild(userCard);
