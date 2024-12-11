@@ -72,7 +72,9 @@
                 {% for post in posts %}
                 <div class="post">
                     <div class="post-header">
-                        <img src="{{ url_for('static', filename='images/profilepicture1.webp') }}" alt="Profile Picture" class="profile-picture">
+                        <!-- Dynamically render the profile picture -->
+                        <img src="{{ url_for('profile.serve_profile_picture', user_id=post.user_id) }}" 
+                             alt="Profile Picture" class="profile-picture">
                         <div class="post-info">
                             <strong>{{ post.title }}</strong><br>
                             <span>{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
