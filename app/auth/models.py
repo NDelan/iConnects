@@ -108,9 +108,8 @@ class Alum(db.Model, UserMixin):
         return self.alum_id
     
     def get_profile_picture_url(self):
-        """Generate a URL to serve the profile picture."""
         if self.profile_picture_data:
-            return url_for('profile.serve_profile_picture', user_id=self.alum_id)
+            return url_for('auth.serve_profile_picture', user_id=self.get_id())
         return url_for('static', filename='images/profile.jpg')
 
     @property
