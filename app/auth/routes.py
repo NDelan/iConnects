@@ -1,3 +1,4 @@
+import io
 from flask import jsonify, render_template, redirect, url_for, flash, request, session, current_app, send_file
 from .models import Student, Alum
 from werkzeug.security import generate_password_hash
