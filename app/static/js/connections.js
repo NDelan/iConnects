@@ -13,7 +13,14 @@ function createConnectionCard(connection, buttonText) {
     card.className = "connection-card";
 
     const img = document.createElement("img");
-    img.src = connection.profile_picture_url || "https://via.placeholder.com/80";
+    img.src = connection.profile_picture_url || "static/images/testProfile2.webp";
+    
+    // if (userInfo.others.user_type === "student") {
+    //     img.src = connection.profile_picture_url || "static/images/testProfile2.webp";
+    // } else {
+    //     img.src = connection.profile_picture_url || "static/images/testProfile1.webp";
+    // }
+
     img.alt = `${connection.name}'s profile picture`;
 
     const name = document.createElement("h3");
@@ -87,11 +94,19 @@ async function loadConnections() {
 
         if (response.ok) {
             // Display the logged-in user's info
-            const userCard = createConnectionCard(
-                { name: "Test Case", title: "Analyst", status: "Active" },
-                "Schedule"
-            );
-            connectionsContainer.appendChild(userCard);
+            if (userInfo.others.user_type === "student") {
+                const userCard = createConnectionCard(
+                    { name: "Baba Odogwu", title: "Data Scientist", status: "Active" },
+                    "Schedule"
+                );
+                connectionsContainer.appendChild(userCard);
+            } else {
+                const userCard = createConnectionCard(
+                    { name: "Kwaku Manu", title: "Mathematics Student", status: "Active" },
+                    "Schedule"
+                );
+                connectionsContainer.appendChild(userCard);
+            }
 
             // Display connections (others)
             userInfo.others.forEach(connection => {
