@@ -1,28 +1,22 @@
+"""
+This module defines the routes for the main blueprint.
+"""
+
 from flask import render_template, url_for, redirect
-from flask_login import login_user, login_required, logout_user, current_user
-from . import main
+
+# Disable the cyclic import warning for this line
+from . import main  # pylint: disable=cyclic-import
 
 @main.route('/')
 def index():
+    """
+    Redirects to the sign-in page of the authentication blueprint.
+    """
     return redirect(url_for('auth.signin'))
 
 @main.route('/home')
-# @login_required
 def home():
+    """
+    Renders the home page.
+    """
     return render_template('home.html')
-
-# @main.route('/posts')
-# # @login_required
-# def posts(): 
-#     return render_template('post.html')
-
-# @main.route('/profile')
-# # @login_required
-# def profile(): 
-#     return render_template('profile.html')
-
-# @main.route('/connections')
-# # @login_required
-# def connections(): 
-#     return render_template('connections.html')
-
