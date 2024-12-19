@@ -1,8 +1,9 @@
-import pytest
+"""
+Sets up pytest fixtures
+"""
 import os
+import pytest
 from app import create_app, db
-from app.auth.models import Alum
-from app.posts.models import Post
 
 @pytest.fixture(scope="module")
 def test_client():

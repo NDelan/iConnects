@@ -1,7 +1,8 @@
+"""
+test for post.py
+"""
 import pytest
 from app.posts.models import Post
-from app import db
-from datetime import datetime
 
 @pytest.fixture
 def new_post_data():
@@ -20,7 +21,7 @@ def test_create_post(test_client, new_post_data):
         'username': 'denutak',
         'password': '11111111'
     }, follow_redirects=True)
-        
+
     response = test_client.post('/posts', data={
         'title': new_post_data["title"],
         'content': new_post_data["content"],
@@ -28,9 +29,9 @@ def test_create_post(test_client, new_post_data):
         'event_description': new_post_data["event_description"],
         'event_date': new_post_data["event_date"],
     }, content_type='multipart/form-data', follow_redirects=True)
-        
-    assert response.status_code == 200
     
+    assert response.status_code == 200
+
     post = Post.query.filter_by(title=new_post_data["title"]).first()
     assert post is not None
     assert post.content == new_post_data["content"]
