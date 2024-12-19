@@ -72,7 +72,7 @@ def rearrange_posts(posts, experiences, projects, achievements):
     """
     Uses OpenAI api to rearrange posts based on their relevance to the user's experiences, projects, and achievements.
     """
-    context = "Rearrange the posts based on their relevance to the following experiences, projects, and achievements:\n\n"
+    context = "Rearrange the posts based on how they relate to the following experiences, projects, and achievements:\n\n"
     context += "Experiences:\n" + "\n".join([exp.title + " - " + exp.description for exp in experiences]) + "\n\n"
     context += "Projects:\n" + "\n".join([proj.title + " - " + proj.description for proj in projects]) + "\n\n"
     context += "Achievements:\n" + "\n".join([ach.title + " - " + ach.description for ach in achievements]) + "\n\n"
@@ -85,7 +85,7 @@ def rearrange_posts(posts, experiences, projects, achievements):
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "You are a database assistant."},
+            {"role": "system", "content": "You are a database expert."},
             {"role": "user", "content": prompt}
         ],
         max_tokens=500,

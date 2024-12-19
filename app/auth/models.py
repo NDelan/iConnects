@@ -1,10 +1,13 @@
+"""
+This module creates the Student and Alum tables
+"""
 from flask import url_for
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import db
 
 class Student(db.Model, UserMixin):
+    """Creates a Student instance"""
     __tablename__ = 'student'
     student_id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30), nullable=False)
@@ -51,6 +54,7 @@ class Student(db.Model, UserMixin):
         self.headline = headline
 
     def get_id(self):
+        """returns the student id"""
         return self.student_id
     
     def get_profile_picture_url(self):
@@ -61,13 +65,16 @@ class Student(db.Model, UserMixin):
     
     @property
     def is_student(self):
+        """checks if an instance is of type Student"""
         return True
 
     @property
     def is_alum(self):
+        """checks if an instance is of type Alum"""
         return False
 
 class Alum(db.Model, UserMixin):
+    """Create an Alum instance"""
     __tablename__ = 'alum'
     alum_id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30), nullable=False)
@@ -108,14 +115,17 @@ class Alum(db.Model, UserMixin):
         return self.alum_id
     
     def get_profile_picture_url(self):
+        """Generate a URL to serve the profile picture."""
         if self.profile_picture_data:
             return url_for('auth.serve_profile_picture', user_id=self.get_id())
         return url_for('static', filename='images/profile.jpg')
 
     @property
     def is_student(self):
+        """checks if an instance is of type Student"""
         return False
 
     @property
     def is_alum(self):
+        """checks if an instance is of type Alum"""
         return True
