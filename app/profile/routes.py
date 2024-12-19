@@ -1,18 +1,27 @@
-from flask import render_template, url_for, redirect, Blueprint, request, jsonify, current_app, Response
-from flask_login import login_user, login_required, logout_user, current_user
+"""
+This module contains routes for user profile management in the Flask application.
+It includes functionality for viewing, updating, and deleting profile information,
+such as profile pictures, personal details, projects, experiences, and achievements.
+"""
+
+from datetime import datetime
+from flask import render_template, url_for, redirect, request, jsonify, current_app, Response
+from flask_login import login_required, current_user
+from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.exceptions import BadRequest, NotFound
+from dateutil.parser import ParserError
 from app import db
 from app.profile.models import Project, Experience, Achievement
 from app.auth.models import Student, Alum
 from . import profile
-from datetime import datetime
 
 @profile.route('/profile', methods=['GET', 'POST'])
 @login_required
 def create_profile():
     """Render the profile page."""
-    FIRST = current_user.first_name
-    LAST = current_user.last_name
-    return render_template('profile.html', firstName=FIRST, lastName=LAST)
+    first_name = current_user.first_name
+    last_name = current_user.last_name
+    return render_template('profile.html', firstName=first_name, lastName=last_name)
 
 def parse_date(date_str):
     """Convert date string to datetime object."""
@@ -29,9 +38,10 @@ def update_profile():
     title = request.form.get('title')
     profile_picture = request.files.get('profile_picture')
 
-
     if name:
-        user.first_name, user.last_name = name.split(" ", 1) if " " in name else (name, user.last_name)
+        user.first_name, user.last_name = (
+            name.split(" ", 1) if " " in name else (name, user.last_name)
+        )
     if title:
         user.headline = title
 
@@ -42,20 +52,27 @@ def update_profile():
     try:
         db.session.commit()
         return render_template('profile.html')
-    except Exception as e:
-        current_app.logger.error(f"Error updating profile: {str(e)}")
+    except SQLAlchemyError as e:
+        current_app.logger.error(f"Database error updating profile: {str(e)}")
         db.session.rollback()
-        return jsonify({'error': 'Could not update profile'}), 400
+        return jsonify({'error': 'Could not update profile due to a database issue'}), 500
+    except BadRequest as e:
+        current_app.logger.error(f"Bad request error updating profile: {str(e)}")
+        return jsonify({'error': 'Bad request. Invalid data provided'}), 400
+    except IOError as e:
+        current_app.logger.error(f"File error updating profile: {str(e)}")
+        return jsonify({'error': 'Error processing profile picture'}), 400
 
 @profile.route('/profile-picture/<int:user_id>')
 def serve_profile_picture(user_id):
     """Serve the profile picture for a user."""
-    if current_user.__tablename__== 'alum':
+    if current_user.__tablename__ == 'alum':
         user_id = current_user.alum_id
         user = Alum.query.get_or_404(user_id)
     else:
         user_id = current_user.student_id
         user = Student.query.get_or_404(user_id)
+
     if user.profile_picture_data:
         return Response(user.profile_picture_data, mimetype=user.profile_picture_content_type)
     return redirect(url_for('static', filename='images/profile.jpg'))
@@ -101,7 +118,7 @@ def add_profile_section(section):
                 new_item.end_date.strftime('%Y-%m-%d') if new_item.end_date else None)
         }), 201
 
-    except Exception as e:
+    except (SQLAlchemyError, ParserError) as e:
         current_app.logger.error(f"Error adding {section} item: {str(e)}")
         db.session.rollback()
         return jsonify({'error': 'Could not add item'}), 400
@@ -141,7 +158,7 @@ def update_profile_section(section, item_id):
                 item.end_date.strftime('%Y-%m-%d') if item.end_date else None)
         }), 200
 
-    except Exception as e:
+    except (SQLAlchemyError, ParserError, NotFound) as e:
         current_app.logger.error(f"Error updating {section} item: {str(e)}")
         db.session.rollback()
         return jsonify({'error': 'Could not update item'}), 400
@@ -166,7 +183,7 @@ def delete_profile_section(section, item_id):
 
         return jsonify({'message': 'Item deleted successfully'})
 
-    except Exception as e:
+    except (SQLAlchemyError, NotFound) as e:
         current_app.logger.error(f"Error deleting {section} item: {str(e)}")
         db.session.rollback()
         return jsonify({'error': 'Could not delete item'}), 500
@@ -196,6 +213,6 @@ def get_profile_section(section):
                 item.end_date.strftime('%Y-%m-%d') if item.end_date else None)
         } for item in items])
 
-    except Exception as e:
+    except SQLAlchemyError as e:
         current_app.logger.error(f"Error fetching {section} items: {str(e)}")
         return jsonify({'error': 'Could not fetch items'}), 500

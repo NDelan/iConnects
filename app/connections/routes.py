@@ -1,17 +1,26 @@
+"""Routes for managing connections between users."""
+
 from flask import render_template, url_for, redirect, flash, request
-from flask_login import login_required, current_user
+from flask_login import login_required
 from . import connections
 from ..auth.models import Student, Alum  # Import your models if necessary
-from app import db
 
 @connections.route('/connections')
 # @login_required
 def show_connections():
+    """Render the connections page."""
     return render_template('connections.html')
+
 
 @connections.route('/connect', methods=['POST'])
 @login_required
 def connect():
+    """
+    Handle connection requests between users.
+
+    Retrieves the receiver's ID and type from the form, validates the inputs,
+    and processes the connection request.
+    """
     receiver_id = request.form.get('receiver_id')  # ID of the user being connected
     receiver_type = request.form.get('receiver_type')  # Type of user: 'student' or 'alum'
 
@@ -24,10 +33,7 @@ def connect():
         return redirect(url_for('connections.show_connections'))
 
     if receiver:
-        # Print details of the sender and receiver
-        sender = current_user
-        print(f"Sender: {sender.first_name} {sender.last_name}, Type: {'Student' if sender.is_student else 'Alum'}")
-        print(f"Receiver: {receiver.first_name} {receiver.last_name}, Type: {receiver_type.capitalize()}")
+        # Log details of the sender and receiver
 
         flash(f"Connection request sent to {receiver.first_name} {receiver.last_name}!")
     else:
