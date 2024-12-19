@@ -1,22 +1,26 @@
+"""
+This module manages the routing for the authentication
+"""
 import io
-from flask import jsonify, render_template, redirect, url_for, flash, request, session, current_app, send_file
-from .models import Student, Alum
 from werkzeug.security import generate_password_hash
-from app import db
-from . import auth
-from flask_login import login_user, login_required, logout_user, current_user
-from app import login_manager
-import app
+from flask import jsonify, render_template, redirect, url_for, flash, request, current_app, send_file
+from flask_login import login_user, login_required, current_user
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from app import db
+from .models import Student, Alum
+from . import auth
+
 
 
 def get_google_client_id():
+    """returns the google client id"""
     return current_app.config['GOOGLE_CLIENT_ID']
 
 @auth.route('/')
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
+    """signs a user user"""
     if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
@@ -27,7 +31,7 @@ def signin():
             flash('You have successfully signed in!')
             login_user(student)
             return redirect(url_for('main.home'))
-        elif alum and alum.check_password(password):
+        if alum and alum.check_password(password):
             flash('You have successfully signed in!')
             login_user(alum)
             return redirect(url_for('main.home'))
@@ -42,6 +46,7 @@ def signin():
 
 @auth.route('/google_signin', methods=['GET', 'POST'])
 def google_signin():
+    """manages google sign in """
     if 'credential' in request.json:  # Handles Google credential token
         data = request.get_json()
         token = data['credential']
@@ -71,44 +76,47 @@ def google_signin():
     return render_template('signin.html', get_google_client_id())
 
 @auth.route('/signup', methods=['GET', 'POST'])
-def signup(): 
+def signup():
+    """manages user sign up"""
     if request.method == "POST":
         username = request.form.get('username')
         password_hash=generate_password_hash(request.form.get('password'))
-        if Student.query.filter_by(username=username).first() or Alum.query.filter_by(username=username).first():
+        if (Student.query.filter_by(username=username).first() or 
+            Alum.query.filter_by(username=username).first()):
             flash('Username already exists')
             return render_template('signin.html')
-        else:
-            if request.form['type'] == "alum":
-                alum = Alum(
-                    first_name = request.form.get('firstname'),
-                    last_name = request.form.get('lastname'),
-                    initial = request.form.get('middlename'),
-                    username = request.form.get('username'),
-                    email = request.form.get('email'),
-                    password_hash = password_hash
-                )
-                db.session.add(alum)
-            elif request.form['type'] == "student":
-                student = Student(
-                    first_name = request.form.get('firstname'),
-                    last_name = request.form.get('lastname'),
-                    initial = request.form.get('initial'),
-                    username = request.form.get('username'),
-                    email = request.form.get('email'),
-                    password_hash = password_hash
-                )
-                db.session.add(student)
-            db.session.commit()
+        
+        if request.form['type'] == "alum":
+            alum = Alum(
+                first_name = request.form.get('firstname'),
+                last_name = request.form.get('lastname'),
+                initial = request.form.get('middlename'),
+                username = request.form.get('username'),
+                email = request.form.get('email'),
+                password_hash = password_hash
+            )
+            db.session.add(alum)
+        elif request.form['type'] == "student":
+            student = Student(
+                first_name = request.form.get('firstname'),
+                last_name = request.form.get('lastname'),
+                initial = request.form.get('initial'),
+                username = request.form.get('username'),
+                email = request.form.get('email'),
+                password_hash = password_hash
+            )
+            db.session.add(student)
+        db.session.commit()
 
-            flash('You have successfully signed up!')
-            return render_template('signin.html')
+        flash('You have successfully signed up!')
+        return render_template('signin.html')
         
     return render_template('signup.html')
 
 @auth.route('/api/user_info')
 @login_required
 def get_user_info():
+    """retrieves user info"""
     user = current_user  # The logged-in user (Student or Alum)
 
     def serialize_user(user):
@@ -124,7 +132,7 @@ def get_user_info():
         response_data = {"user_type": "student", "others": other_users_info}
         return jsonify(response_data)
 
-    elif user.is_alum:  # If the user is an Alum
+    if user.is_alum:  # If the user is an Alum
         students = Student.query.limit(50).all()  # Limit to 50 results
         other_users_info = [serialize_user(student) for student in students]
         return jsonify({"user_type": "alum", "others": other_users_info})
