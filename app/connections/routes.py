@@ -2,8 +2,9 @@
 
 from flask import render_template, url_for, redirect, flash, request
 from flask_login import login_required
-from . import connections
-from ..auth.models import Student, Alum  # Import your models if necessary
+from app.connections import connections  # Import Blueprint directly
+from app.auth.models import Student, Alum  # Import your models if necessary
+
 
 @connections.route('/connections')
 # @login_required
@@ -34,7 +35,6 @@ def connect():
 
     if receiver:
         # Log details of the sender and receiver
-
         flash(f"Connection request sent to {receiver.first_name} {receiver.last_name}!")
     else:
         flash('User not found.')
