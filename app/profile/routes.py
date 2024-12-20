@@ -4,8 +4,16 @@ It includes functionality for viewing, updating, and deleting profile informatio
 such as profile pictures, personal details, projects, experiences, and achievements.
 """
 
-from datetime import datetime
-from flask import render_template, url_for, redirect, request, jsonify, current_app, Response
+from datetime import datetime  # pylint: disable=wrong-import-position
+from flask import (
+    render_template,
+    url_for,
+    redirect,
+    request,
+    jsonify,
+    current_app,
+    Response,
+)
 from flask_login import login_required, current_user
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import BadRequest, NotFound
@@ -13,7 +21,8 @@ from dateutil.parser import ParserError
 from app import db
 from app.profile.models import Project, Experience, Achievement
 from app.auth.models import Student, Alum
-from . import profile
+from app.profile import profile
+
 
 @profile.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -23,11 +32,13 @@ def create_profile():
     last_name = current_user.last_name
     return render_template('profile.html', firstName=first_name, lastName=last_name)
 
+
 def parse_date(date_str):
     """Convert date string to datetime object."""
     if not date_str or date_str == 'Present':
         return None
     return datetime.strptime(date_str, '%Y-%m-%d')
+
 
 @profile.route('/profile/update_profile', methods=['GET', 'POST'])
 @login_required
@@ -63,6 +74,7 @@ def update_profile():
         current_app.logger.error(f"File error updating profile: {str(e)}")
         return jsonify({'error': 'Error processing profile picture'}), 400
 
+
 @profile.route('/profile-picture/<int:user_id>')
 def serve_profile_picture(user_id):
     """Serve the profile picture for a user."""
@@ -76,6 +88,7 @@ def serve_profile_picture(user_id):
     if user.profile_picture_data:
         return Response(user.profile_picture_data, mimetype=user.profile_picture_content_type)
     return redirect(url_for('static', filename='images/profile.jpg'))
+
 
 @profile.route('/api/profile/<section>', methods=['POST'])
 @login_required
@@ -97,7 +110,7 @@ def add_profile_section(section):
             description=data.get('description', ''),
             start_date=parse_date(data.get('startDate')),
             end_date=parse_date(data.get('endDate')),
-            is_current=data.get('endDate') is None
+            is_current=data.get('endDate') is None,
         )
 
         if hasattr(current_user, 'student_id'):
@@ -115,13 +128,14 @@ def add_profile_section(section):
             'description': new_item.description,
             'startDate': new_item.start_date.strftime('%Y-%m-%d') if new_item.start_date else None,
             'endDate': 'Present' if new_item.is_current else (
-                new_item.end_date.strftime('%Y-%m-%d') if new_item.end_date else None)
+                new_item.end_date.strftime('%Y-%m-%d') if new_item.end_date else None),
         }), 201
 
     except (SQLAlchemyError, ParserError) as e:
         current_app.logger.error(f"Error adding {section} item: {str(e)}")
         db.session.rollback()
         return jsonify({'error': 'Could not add item'}), 400
+
 
 @profile.route('/api/profile/<section>/<int:item_id>', methods=['PUT'])
 @login_required
@@ -155,13 +169,14 @@ def update_profile_section(section, item_id):
             'description': item.description,
             'startDate': item.start_date.strftime('%Y-%m-%d') if item.start_date else None,
             'endDate': 'Present' if item.is_current else (
-                item.end_date.strftime('%Y-%m-%d') if item.end_date else None)
+                item.end_date.strftime('%Y-%m-%d') if item.end_date else None),
         }), 200
 
     except (SQLAlchemyError, ParserError, NotFound) as e:
         current_app.logger.error(f"Error updating {section} item: {str(e)}")
         db.session.rollback()
         return jsonify({'error': 'Could not update item'}), 400
+
 
 @profile.route('/api/profile/<section>/<int:item_id>', methods=['DELETE'])
 @login_required
@@ -188,6 +203,7 @@ def delete_profile_section(section, item_id):
         db.session.rollback()
         return jsonify({'error': 'Could not delete item'}), 500
 
+
 @profile.route('/api/profile/<section>', methods=['GET'])
 @login_required
 def get_profile_section(section):
@@ -210,7 +226,7 @@ def get_profile_section(section):
             'description': item.description,
             'startDate': item.start_date.strftime('%Y-%m-%d') if item.start_date else None,
             'endDate': 'Present' if item.is_current else (
-                item.end_date.strftime('%Y-%m-%d') if item.end_date else None)
+                item.end_date.strftime('%Y-%m-%d') if item.end_date else None),
         } for item in items])
 
     except SQLAlchemyError as e:
